@@ -1,4 +1,4 @@
-package model;
+package Scheduler;
 
 public class TaskData {
 }
