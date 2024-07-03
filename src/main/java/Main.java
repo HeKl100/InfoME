@@ -14,11 +14,13 @@ import logging.LoggerWrapper;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Main
 {
     private static LoggerWrapper logger;
-    public static final String dbUrl = "jdbc:sqlite:C:\\InfoME\\Datenbank\\InfoME.db";
+    private static ScheduledExecutorService scheduler;
+    private static final String dbUrl = "jdbc:sqlite:C:\\InfoME\\Datenbank\\InfoME.db";
 
     public static void main(String[] args)
     {
