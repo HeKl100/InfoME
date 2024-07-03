@@ -8,9 +8,9 @@ import java.io.IOException;
 
 public class FileManager
 {
-    public String rootFolderPath;
-    public String databaseFolderPath;
-    public String logFolderPath;
+    public String rootFolderPath = "C:\\InfoME";
+    public String databaseFolderPath = "C:\\InfoME\\Datenbank";
+    public String logFolderPath = "C:\\InfoME\\Log";
 
     private static final LoggerWrapper logger = new LoggerWrapper(FileManager.class);
 
@@ -19,6 +19,8 @@ public class FileManager
         createRootFolder();
         createDatabaseFolder();
         createLogFolder();
+        createConfigFileIfNotExists();
+
     }
 
     public void createRootFolder() throws IOException
@@ -26,8 +28,6 @@ public class FileManager
         // set path for the root folder, where all the data is stored
         // check if folder already exists - if not -> create
         // path = C:\InfoME
-
-        rootFolderPath = "C:\\InfoME";
 
         File rootFolder = new File(rootFolderPath);
 
@@ -57,8 +57,6 @@ public class FileManager
         // check if folder already exists - if not -> create
         // path = C:\InfoME\Datenbank
 
-        databaseFolderPath = "C:\\InfoME\\Datenbank";
-
         File databaseFolder = new File(databaseFolderPath);
 
         if(!databaseFolder.exists())
@@ -75,8 +73,6 @@ public class FileManager
         // set the path for the logfiles folder, where the logfiles are stored
         // check if folder already exists - if not -> crete
         // path = C:\InfoME\Log
-
-        logFolderPath = "C:\\InfoME\\Log";
 
         File logFolder = new File(logFolderPath);
 
