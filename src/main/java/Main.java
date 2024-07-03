@@ -11,22 +11,14 @@ import GUI.MainWindow;
 import database.DatabaseManager;
 import file.FileManager;
 import logging.LoggerWrapper;
-import Scheduler.TaskData;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class Main
 {
     private static LoggerWrapper logger;
     public static final String dbUrl = "jdbc:sqlite:C:\\InfoME\\Datenbank\\InfoME.db";
-    private static final String TASKS_FILE = "tasks.json";
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
-    private List<TaskData> tasks = new ArrayList<>();
 
     public static void main(String[] args)
     {
