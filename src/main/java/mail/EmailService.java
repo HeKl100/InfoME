@@ -36,8 +36,12 @@ public class EmailService
         }
         return instance;
     }
+    public static synchronized EmailService getInstance()
+    {
+        return instance;
+    }
 
-    public void senEmail(String receiver, String subject, String body) throws MessagingException {
+    public void sendEmail(String receiver, String subject, String body) throws MessagingException {
         Properties properties  = new Properties();
         properties.put("mail.smtp.host", Server);
         properties.put("mail.smtp.port", Port);
@@ -61,7 +65,8 @@ public class EmailService
                 message.setFrom(new InternetAddress(Email));
                 message.setRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
                 message.setSubject(subject);
-                message.setText(body);
+                // message.setText(body);
+                message.setContent(body, "text/html; charset=UTF-8");
 
                 transport.connect(Server, Integer.parseInt(Port), User, Password);
                 transport.sendMessage(message, message.getAllRecipients());

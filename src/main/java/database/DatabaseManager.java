@@ -107,6 +107,34 @@ public class DatabaseManager
                 ")";
 
         //--------------------------------------------------------------------------------------------------------------
+        // 5.) KVData
+        // here the recent KV Data will be saved
+
+        String createKVDataTableSQL = "CREATE TABLE IF NOT EXISTS KV_Data (" +
+                "Status TEXT NOT NULL," +
+                "Vorgang_Nr TEXT NOT NULL," +
+                "VO_Datum TEXT NOT NULL," +
+                "Datum TEXT NOT NULL," +
+                "Kunden_Nr TEXT NOT NULL," +
+                "Kunde TEXT NOT NULL," +
+                "Sachbearbeiter_Nr TEXT NOT NULL," +
+                "Sachbearbeiter TEXT NOT NULL," +
+                "ERF_Mitarbeiter_Nr TEXT NOT NULL," +
+                "ERF_Mitarbeiter TEXT NOT NULL," +
+                "Filiale_Nr TEXT NOT NULL," +
+                "Filiale TEXT NOT NULL," +
+                "Vermittler_Nr TEXT NOT NULL," +
+                "Vermittler TEXT NOT NULL," +
+                "Betreff TEXT NOT NULL," +
+                "KV_Nr TEXT NOT NULL," +
+                "KV_Datum TEXT NOT NULL," +
+                "KV_Genehmigung TEXT NOT NULL," +
+                "KV_Genehm_Datum TEXT NOT NULL," +
+                "Letzte_Aenderung_am TEXT NOT NULL," +
+                "Letzte_Aenderung_Tage TEXT NOT NULL" +
+                ");";
+
+        //--------------------------------------------------------------------------------------------------------------
 
         try (Connection conn = getConn(); Statement stmt = conn.createStatement())
         {
@@ -114,9 +142,10 @@ public class DatabaseManager
          stmt.executeUpdate(createEmployeeTableSQL);
          stmt.executeUpdate(createImportExportTableSQL);
          stmt.executeUpdate(createTriggerTableSQL);
+         stmt.executeUpdate(createKVDataTableSQL);
 
          // creation was successfully
-
+            logger.info("Table - MailSettings - successfully created");
          logger.info("Table - MailSettings - successfully created");
         }
         catch (SQLException e)

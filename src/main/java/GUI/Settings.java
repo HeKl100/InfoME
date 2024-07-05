@@ -248,7 +248,7 @@ public class Settings extends JFrame
                     try
                     {
                         // try to send the testmail
-                        ES.senEmail(receiver, "Test-Mail // InfoME", "Daten wurden korrekt eingegeben! :)");
+                        ES.sendEmail(receiver, "Test-Mail // InfoME", "Daten wurden korrekt eingegeben! :)");
 
                         logger.info("test-e-mail was send successfully to " + receiver);
                     }
@@ -604,4 +604,7 @@ public class Settings extends JFrame
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
+
+
+
 }
