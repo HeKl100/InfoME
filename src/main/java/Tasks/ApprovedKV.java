@@ -150,7 +150,19 @@ public class ApprovedKV
      */
     public static String getCurrentDate()
     {
-        return LocalDate.now().format(DATE_FORMATTER);
+        StringBuilder Date = new StringBuilder();
+
+        int day = LocalDate.now().getDayOfMonth();
+        int month = LocalDate.now().getMonthValue();
+        int year = LocalDate.now().getYear();
+
+        Date.append(day);
+        Date.append("-");
+        Date.append(month);
+        Date.append("-");
+        Date.append(year);
+
+        return Date.toString();
     }
 
 
