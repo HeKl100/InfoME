@@ -152,7 +152,6 @@ public class FileManager
 
     public List<String> getKlaerung()
     {
-        System.out.println("ggg");
         return null;
     }
 }
