@@ -36,6 +36,8 @@ public class TriggerTableModel extends AbstractTableModel
         return triggers[row];
     }
 
+
+
     public void updateTriggersTable(Trigger[] triggers)
     {
         this.triggers = triggers;

@@ -1,17 +1,48 @@
 package file;
+
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The EncodingFixer class provides methods to fix common encoding issues in text.
+ * This class uses a predefined set of encoding fixes, but it also allows users to add custom fixes.
+ */
 public class EncodingFixer {
 
+    // Singleton instance
+    private static EncodingFixer instance;
 
-    public static String encodeFix(String line) {
-        return repairEncodingIssues(line);
+    // Dictionary mapping incorrectly encoded characters to their correct counterparts
+    private final Map<String, String> encodingFixes;
+
+    /**
+     * Private constructor to initialize the encoding fixes map.
+     */
+    private EncodingFixer()
+    {
+        encodingFixes = new HashMap<>();
+        initializeDefaultFixes();
     }
-    // Method to repair encoding issues based on predefined character mappings
-    private static String repairEncodingIssues(String input) {
-        // Dictionary mapping incorrectly encoded characters to their correct counterparts
-        Map<String, String> encodingFixes = new HashMap<>();
+
+    /**
+     * Get the singleton instance of the EncodingFixer.
+     *
+     * @return the singleton instance
+     */
+    public static EncodingFixer getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new EncodingFixer();
+        }
+        return instance;
+    }
+
+    /**
+     * Initialize the default encoding fixes.
+     */
+    private void initializeDefaultFixes()
+    {
         encodingFixes.put("Ã¤", "ä");
         encodingFixes.put("Ã¶", "ö");
         encodingFixes.put("Ã¼", "ü");
@@ -39,12 +70,32 @@ public class EncodingFixer {
         encodingFixes.put("Ãƒ", "Ã");
         encodingFixes.put("Ã‘", "Ñ");
         encodingFixes.put("Ã±", "ñ");
-
-        for (Map.Entry<String, String> entry : encodingFixes.entrySet()) {
-            input = input.replace(entry.getKey(), entry.getValue());
-        }
-
-        return input;
     }
 
+    /**
+     * Adds a custom encoding fix.
+     *
+     * @param incorrect the incorrect encoding
+     * @param correct   the correct encoding
+     */
+    public void addEncodingFix(String incorrect, String correct)
+    {
+        encodingFixes.put(incorrect, correct);
+    }
+
+    /**
+     * Fix encoding issues in the provided string.
+     *
+     * @param line the string with potential encoding issues
+     * @return the string with encoding issues fixed
+     */
+    public String encodeFix(String line)
+    {
+        for (Map.Entry<String, String> entry : encodingFixes.entrySet())
+        {
+            line = line.replace(entry.getKey(), entry.getValue());
+        }
+
+        return line;
+    }
 }

@@ -25,13 +25,17 @@ public class FileManager
 
     private static final LoggerWrapper logger = new LoggerWrapper(FileManager.class);
 
+    //------------------------------------------------------------------------------------------------------------------
+    // FileManager Constructor
 
-    public FileManager() throws IOException {
+    public FileManager() throws IOException
+    {
         createRootFolder();
         createDatabaseFolder();
         createLogFolder();
-
     }
+    //------------------------------------------------------------------------------------------------------------------
+    // If Root Folder is missing, it will be created here.
 
     public void createRootFolder() throws IOException
     {
@@ -60,6 +64,8 @@ public class FileManager
         }
 
     }
+    //------------------------------------------------------------------------------------------------------------------
+    // If Database Folder is missing, it will be created here.
 
     public void createDatabaseFolder()
     {
@@ -77,6 +83,8 @@ public class FileManager
             }
         }
     }
+    //------------------------------------------------------------------------------------------------------------------
+    // If Log Folder is missing, it will be created here.
 
     public void createLogFolder()
     {
@@ -98,9 +106,19 @@ public class FileManager
     // Reads In the new KV Data from the newest File in the imported File.
     public List<String> readInKVData(ImportExport importExport) throws IOException
     {
-        String folderPath = importExport.getImportPath();
+        EncodingFixer eF = EncodingFixer.getInstance();
+        LineValidator lV = LineValidator.getInstance();
+
+
+        String url = "smb://172.22.161.239/Controlling_Daten/";
+        String username = "qlik\\controlling";
+        String password = "Hd7h3jn-d3nund3";
+        ;
+        SMBFileShare smb = new SMBFileShare(url, username, password);
+
+        // String folderPath = importExport.getImportPath();
         String fileName = importExport.getFilename();
-        File newestFile = getNewestFile(folderPath, fileName);
+        File newestFile = smb.getNewestFile(url, fileName);
 
 
             // Reads in all Lines
@@ -122,37 +140,18 @@ public class FileManager
             allLines.remove(0);
             // Fix encoding issues and then validate the Lines
             for (String line : allLines) {
-                line = EncodingFixer.encodeFix(line);
+                line = eF.encodeFix(line);
                 encodedLines.add(line);
             }
             allLines = encodedLines;
 
-            validLines = LineValidator.validateLines(allLines);
+            validLines = lV.validateLines(allLines);
         }
         return validLines;
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // Returns newest modified File in a Folder given the folderPath
-    public static File getNewestFile(String folderPath, String fileName) {
-        File folder = new File(folderPath);
+    public List<String> getKlaerung()
+    {
 
-        // Check if the folder exists and is indeed a directory
-        if (!folder.exists() || !folder.isDirectory()) {
-            throw new IllegalArgumentException("The path must be a valid directory.");
-        }
-
-        // Get all files from the directory
-        File[] files = folder.listFiles();
-        if (files == null || files.length == 0) {
-            return null;  // No files in the directory
-        }
-
-        // Find the most recent file that includes the specified fileName in its name
-        return Arrays.stream(files)
-                .filter(File::isFile)  // Make sure to only include files, not directories
-                .filter(file -> file.getName().contains(fileName))  // Include only files that contain the fileName substring
-                .max(Comparator.comparingLong(File::lastModified))  // Get the file with the most recent last modified date
-                .orElse(null);  // Return null if no matching files are found
     }
 }

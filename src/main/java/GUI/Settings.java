@@ -104,7 +104,7 @@ public class Settings extends JFrame
         setSize(screenSize.width, screenSize.height);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
-
+        logger.info("Opening Settings");
         databaseFolderPath = "C:\\InfoME\\Datenbank";
         dbManager = DatabaseManager.getInstance(databaseFolderPath);
         dbQuery = new DatabaseQuery(dbManager);

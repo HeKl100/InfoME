@@ -13,6 +13,8 @@ public class DatabaseManager
 
     private static final LoggerWrapper logger = new LoggerWrapper(DatabaseManager.class);
 
+    private static final String DATABASE_FOLDER_PATH = "C:\\InfoME\\Datenbank";
+
     private String dbUrl;
 
     private Connection conn;
@@ -20,6 +22,10 @@ public class DatabaseManager
     private DatabaseManager(String dbUrl)
     {
         this.dbUrl = dbUrl;
+    }
+
+    public static String getDatabaseFolderPath() {
+        return DATABASE_FOLDER_PATH;
     }
 
     public static synchronized DatabaseManager getInstance(String dbUrl)
@@ -135,6 +141,7 @@ public class DatabaseManager
                 ");";
 
         //--------------------------------------------------------------------------------------------------------------
+        // Executing and creating all Tables.
 
         try (Connection conn = getConn(); Statement stmt = conn.createStatement())
         {
@@ -145,13 +152,12 @@ public class DatabaseManager
          stmt.executeUpdate(createKVDataTableSQL);
 
          // creation was successfully
-            logger.info("Table - MailSettings - successfully created");
          logger.info("Table - MailSettings - successfully created");
+
         }
         catch (SQLException e)
         {
             // creation was not successfully
-
             logger.info("Table - MailSettings - could not be created! " + e.getMessage());
 
             throw new RuntimeException(e);

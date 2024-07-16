@@ -6,16 +6,18 @@ import file.StringSplitter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 
 public class DatabaseQuery
 {
     private DatabaseManager dbManager;
-
     private static final LoggerWrapper logger = new LoggerWrapper(DatabaseQuery.class);
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructor of DatabaseQuery
 
     public DatabaseQuery(DatabaseManager dbManager)
     {
@@ -564,11 +566,11 @@ public class DatabaseQuery
         }
     }
 
-    public List<Employee> getKVEmployees() throws IOException {
+    public List<Employee> getEmployeesOfCategory(String categoryStr) throws IOException {
         List<Employee> employees = new ArrayList<>();
 
 
-        String sql = "SELECT * FROM Employee WHERE state = 'aktiv' AND category = 'genehmigte KVs' ORDER BY email ASC ";
+        String sql = "SELECT * FROM Employee WHERE state = 'aktiv' AND category = "+ categoryStr +" ORDER BY email ASC ";
         try (Connection conn = dbManager.getConn();
              PreparedStatement dataPstmt = conn.prepareStatement(sql);
              ResultSet data = dataPstmt.executeQuery()) {
