@@ -152,6 +152,7 @@ public class FileManager
 
     public List<String> getKlaerung()
     {
+        System.out.println("g");
         return null;
     }
 }
