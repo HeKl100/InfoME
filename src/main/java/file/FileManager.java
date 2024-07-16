@@ -152,6 +152,6 @@ public class FileManager
 
     public List<String> getKlaerung()
     {
-
+        return null;
     }
 }
