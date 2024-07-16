@@ -507,7 +507,7 @@ public class DatabaseQuery
             {
                 int KVNrInt = Integer.parseInt(KVNr); // turn KVNr into an actual number
                 // fetch the old KV Status from the old Data
-                String oldKVStatus = getKVGenehmigungByKVNr(KVNrInt, "KV_Data");
+                String oldKVStatus = getKVGenehmigungByKVNr(KVNrInt, tableName);
                 // fetch the new KV Status from the new Line
                 String newKVStatus = data[46];
 
@@ -570,7 +570,7 @@ public class DatabaseQuery
         List<Employee> employees = new ArrayList<>();
 
 
-        String sql = "SELECT * FROM Employee WHERE state = 'aktiv' AND category = "+ categoryStr +" ORDER BY email ASC ";
+        String sql = "SELECT * FROM Employee WHERE state = 'aktiv' AND category = '" + categoryStr + "' ORDER BY email ASC ";
         try (Connection conn = dbManager.getConn();
              PreparedStatement dataPstmt = conn.prepareStatement(sql);
              ResultSet data = dataPstmt.executeQuery()) {

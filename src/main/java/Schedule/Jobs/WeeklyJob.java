@@ -24,17 +24,34 @@ public class WeeklyJob implements Job
     @Override
     public void execute(JobExecutionContext context)
     {
-        ApprovedKV approvedKV = new ApprovedKV();
+        switch (context.getJobDetail().getKey().getName())
+        {
+            case "Bewilligte-KV Liste":
+                ApprovedKV approvedKV = new ApprovedKV();
 
-        try
-        {
-            approvedKV.readAndWrite();
-            logger.info("Weekly task executed successfully at " + TaskUtils.currentDateTime());
+                try
+                {
+                    approvedKV.readAndWrite();
+                    logger.info("Weekly task executed successfully at " + TaskUtils.currentDateTime());
+                }
+                catch (IOException e)
+                {
+                    logger.error("Failed to execute weekly task at " + TaskUtils.currentDateTime() + "\n" + e.getMessage());
+                    throw new RuntimeException("Error during weekly job execution", e);
+                }
+                break;
+            case "Klärungsliste":
+                break;
+            case "Krankenkasse-Bewilligungs-Urgenzliste":
+                break;
+            case "Abrechnungs-Kontrollliste":
+                break;
+            default:
+                break;
         }
-        catch (IOException e)
-        {
-            logger.error("Failed to execute weekly task at " + TaskUtils.currentDateTime() + "\n" + e.getMessage());
-            throw new RuntimeException("Error during weekly job execution", e);
-        }
+
+
+
+
     }
 }

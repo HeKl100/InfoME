@@ -41,11 +41,13 @@ public class ApprovedKV
         List<String> newAcceptedKVs = dbQuery.compareToDatabase(newLines, "KV_Data");
 
         // Log the accepted KV lines
+        /*
         for (String line : newAcceptedKVs)
         {
             String[] data = StringSplitter.splitString(line);
             logger.info(data[44] + " " + line);
         }
+        */
 
         // Send emails for newly accepted KVs
         getMailsSent(newAcceptedKVs);
@@ -65,7 +67,7 @@ public class ApprovedKV
         DatabaseManager dbManager = DatabaseManager.getInstance(DATABASE_FOLDER_PATH);
         DatabaseQuery dbQuery = new DatabaseQuery(dbManager);
 
-        List<Employee> employees = dbQuery.getEmployeesOfCategory("Bewilligte-KV Liste");
+        List<Employee> employees = dbQuery.getEmployeesOfCategory("genehmigte KVs");
         List<KVRequest> approvedRequests = dbQuery.getKVRequests(newAcceptedKVs);
 
         // Map for the approved Requests and their Vermittler
@@ -150,5 +152,6 @@ public class ApprovedKV
     {
         return LocalDate.now().format(DATE_FORMATTER);
     }
+
 
 }

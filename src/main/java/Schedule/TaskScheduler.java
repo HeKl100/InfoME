@@ -53,7 +53,7 @@ public class TaskScheduler
             {
                 org.quartz.Trigger quartzTrigger = createTrigger(trigger);
                 scheduler.scheduleJob(jobDetail, quartzTrigger);
-                logger.info("Scheduled job: " + jobDetail.getKey() + " with trigger: " + quartzTrigger.getKey());
+                logger.info("Scheduled Task: " + jobDetail.getKey() + " with trigger: " + quartzTrigger.getKey());
             }
             else
             {
@@ -73,13 +73,13 @@ public class TaskScheduler
         return switch (trigger.getScheduleInterval())
         {
             case "täglich" -> JobBuilder.newJob(DailyJob.class)
-                    .withIdentity(trigger.getScheduleName() + trigger.getId(), "DailyGroup")
+                    .withIdentity(trigger.getScheduleName(), "DailyGroup")
                     .build();
             case "wöchentlich" -> JobBuilder.newJob(WeeklyJob.class)
-                    .withIdentity(trigger.getScheduleName() + trigger.getId(), "WeeklyGroup")
+                    .withIdentity(trigger.getScheduleName(), "WeeklyGroup")
                     .build();
             case "monatlich" -> JobBuilder.newJob(MonthlyJob.class)
-                    .withIdentity(trigger.getScheduleName() + trigger.getId(), "MonthlyGroup")
+                    .withIdentity(trigger.getScheduleName(), "MonthlyGroup")
                     .build();
             default -> {
                 logger.error("Unsupported schedule interval: " + trigger.getScheduleInterval());

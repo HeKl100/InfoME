@@ -149,7 +149,8 @@ public class FileManager
         }
         return validLines;
     }
-
+    //------------------------------------------------------------------------------------------------------------------
+    // Reads In the new Klaerungsliste
     public List<String> getKlaerung()
     {
 
