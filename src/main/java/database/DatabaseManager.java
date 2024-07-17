@@ -140,6 +140,55 @@ public class DatabaseManager
                 "Letzte_Aenderung_Tage TEXT NOT NULL" +
                 ");";
 
+
+        //--------------------------------------------------------------------------------------------------------------
+        // 6.) Controlling Data List Creation
+
+
+        String createControllingDataSQL = "CREATE TABLE IF NOT EXISTS ControllingData (" +
+                "Status TEXT NOT NULL," +  // 0
+                "Uebernahme_Datum TEXT NOT NULL," + // 1
+                "Vorgang_Nr TEXT NOT NULL," + // 2
+                "VO_Datum TEXT NOT NULL," + // 3
+                "Datum TEXT NOT NULL," + // 4
+                "Kunden_Nr TEXT NOT NULL," + // 5
+                "Kunde TEXT NOT NULL," + // 6
+                "KT_Typ TEXT NOT NULL," + // 7
+                "KT_Nr TEXT NOT NULL," + // 8
+                "Kostentraeger TEXT NOT NULL," + // 9
+                "Mitarbeiter1_Nr TEXT NOT NULL," + // 10
+                "Mitarbeiter1 TEXT NOT NULL," + // 11
+                "Mitarbeiter2_Nr TEXT NOT NULL," + // 12
+                "Mitarbeiter2 TEXT NOT NULL," + // 13
+                "Mitarbeiter3_Nr TEXT NOT NULL," + // 14
+                "Mitarbeiter3 TEXT NOT NULL," + // 15
+                "Sachbearbeiter_Nr TEXT NOT NULL," + // 16
+                "Sachbearbeiter TEXT NOT NULL," + // 17
+                "ERF_Mitarbeiter_Nr TEXT NOT NULL," + // 18
+                "ERF_Mitarbeiter TEXT NOT NULL," + // 19
+                "Filiale_Nr TEXT NOT NULL," + // 20
+                "Filiale TEXT NOT NULL," + // 21
+                "Verordner_Nr TEXT NOT NULL," + // 22
+                "Verordner TEXT NOT NULL," + // 23
+                "Vermittler_Nr TEXT NOT NULL," + // 24
+                "Vermittler TEXT NOT NULL," + // 25
+                "Betreff TEXT NOT NULL," + // 26
+                "Auftrag_Nr TEXT NOT NULL," + // 27
+                "AU_Datum TEXT NOT NULL," + // 28
+                "Lieferschein_Nr TEXT NOT NULL," + // 29
+                "Lieferschein_Datum TEXT NOT NULL," + // 30
+                "Lieferdatum TEXT NOT NULL," + // 31
+                "KV_Nr TEXT NOT NULL," + // 32
+                "KV_Datum TEXT NOT NULL," + // 33
+                "KV_Genehmigung TEXT NOT NULL," + // 34
+                "KV_Genehm_Datum TEXT NOT NULL," + // 35
+                "Lieferstatus TEXT NOT NULL," + // 36
+                "Abrechnungsstatus TEXT NOT NULL," + // 37
+                "Letzte_Aenderung_am TEXT NOT NULL," + // 38
+                "Letzte_Aenderung_Tage TEXT NOT NULL," + // 39
+                "Letzte_Aenderung TEXT NOT NULL" + // 40
+                ");";
+
         //--------------------------------------------------------------------------------------------------------------
         // Executing and creating all Tables.
 
@@ -150,6 +199,7 @@ public class DatabaseManager
          stmt.executeUpdate(createImportExportTableSQL);
          stmt.executeUpdate(createTriggerTableSQL);
          stmt.executeUpdate(createKVDataTableSQL);
+         stmt.executeUpdate(createControllingDataSQL);
 
          // creation was successfully
          logger.info("Table - MailSettings - successfully created");

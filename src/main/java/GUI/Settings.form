@@ -577,7 +577,10 @@
                     <properties>
                       <font size="14"/>
                       <model>
+                        <item value="KK-Urgenzliste"/>
                         <item value="genehmigte KVs"/>
+                        <item value="Klärungsliste"/>
+                        <item value="Abrechnungs-Kontrollliste"/>
                       </model>
                     </properties>
                   </component>

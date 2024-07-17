@@ -2,6 +2,7 @@ package Schedule.Jobs;
 
 import Schedule.TaskUtils;
 import Tasks.ApprovedKV;
+import Tasks.Urgenzliste;
 import database.DatabaseManager;
 import database.DatabaseQuery;
 import logging.LoggerWrapper;
@@ -48,6 +49,11 @@ public class DailyJob implements Job
             case "Klärungsliste":
                 break;
             case "Krankenkasse-Bewilligungs-Urgenzliste":
+                try {
+                    Urgenzliste.doTask();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "Abrechnungs-Kontrollliste":
                 break;

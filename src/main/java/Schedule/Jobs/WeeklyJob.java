@@ -2,6 +2,7 @@ package Schedule.Jobs;
 
 import Schedule.TaskUtils;
 import Tasks.ApprovedKV;
+import Tasks.Urgenzliste;
 import logging.LoggerWrapper;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -43,6 +44,11 @@ public class WeeklyJob implements Job
             case "Klärungsliste":
                 break;
             case "Krankenkasse-Bewilligungs-Urgenzliste":
+                try {
+                    Urgenzliste.doTask();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "Abrechnungs-Kontrollliste":
                 break;
