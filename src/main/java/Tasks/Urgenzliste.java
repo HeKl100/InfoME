@@ -18,7 +18,7 @@ import java.util.List;
 public class Urgenzliste
 {
 
-    private static final LoggerWrapper logger = new LoggerWrapper(ApprovedKV.class);
+    private static final LoggerWrapper logger = new LoggerWrapper(Urgenzliste.class);
     private static final EmailService emailService = EmailService.getInstance();
 
     private static final String DATABASE_FOLDER_PATH = "C:\\InfoME\\Datenbank";
@@ -34,7 +34,7 @@ public class Urgenzliste
         List<String> newLines = fileManager.readInKVData(dbQuery.getImportExport());
 
         logger.info("Writing to the Database");
-        dbQuery.importUrgenzData(newLines);
+        dbQuery.importControllingData(newLines);
 
         logger.info("Reading the Triggers(Employees)");
         List<Employee> employees = dbQuery.getEmployeesOfCategory("KK-Urgenzliste");

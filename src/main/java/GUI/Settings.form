@@ -579,7 +579,7 @@
                       <model>
                         <item value="KK-Urgenzliste"/>
                         <item value="genehmigte KVs"/>
-                        <item value="Klärungsliste"/>
+                        <item value="Klaerungsliste"/>
                         <item value="Abrechnungs-Kontrollliste"/>
                       </model>
                     </properties>

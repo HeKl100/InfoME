@@ -622,7 +622,7 @@ public class DatabaseQuery
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    public void importUrgenzData(List<String> lines) {
+    public void importControllingData(List<String> lines) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         String sql = "SELECT Uebernahme_Datum FROM ControllingData LIMIT 1";
@@ -633,7 +633,7 @@ public class DatabaseQuery
             if(rs.next())
             {
                 String dateStr = rs.getString(1);
-                logger.info("The File is the most recent Date: " + dateStr);
+
                     // Parse the date string to a LocalDate object
                     LocalDate givenDate = LocalDate.parse(dateStr, formatter);
 
@@ -643,6 +643,7 @@ public class DatabaseQuery
                     // Compare the given date with yesterday's date
                     if (givenDate.equals(yesterday))
                     {
+                        logger.info("The File is the most recent Date: " + dateStr);
                         return;
                     }
 
@@ -656,7 +657,7 @@ public class DatabaseQuery
 
         clearTable("ControllingData");
 
-        sql = "INSERT INTO ControllingData (Status, Uebernahme_Datum, Vorgang_Nr, VO_Datum, Datum, Kunden_Nr, Kunde, KT_Typ, KT_Nr, Kostentraeger, Mitarbeiter1_Nr, Mitarbeiter1, Mitarbeiter2_Nr, Mitarbeiter2, Mitarbeiter3_Nr, Mitarbeiter3, Sachbearbeiter_Nr, Sachbearbeiter, ERF_Mitarbeiter_Nr, ERF_Mitarbeiter, Filiale_Nr, Filiale, Verordner_Nr, Verordner, Vermittler_Nr, Vermittler, Betreff, Auftrag_Nr, AU_Datum, Lieferschein_Nr, Lieferschein_Datum, Lieferdatum, KV_Nr, KV_Datum, KV_Genehmigung, KV_Genehm_Datum, Lieferstatus, Abrechnungsstatus, Letzte_Aenderung_am, Letzte_Aenderung_Tage, Letzte_Aenderung) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        sql = "INSERT INTO ControllingData (Status, Uebernahme_Datum, Vorgang_Nr, VO_Datum, Datum, Kunden_Nr, Kunde, KT_Typ, KT_Nr, Kostentraeger, Mitarbeiter1_Nr, Mitarbeiter1, Mitarbeiter2_Nr, Mitarbeiter2, Mitarbeiter3_Nr, Mitarbeiter3, Sachbearbeiter_Nr, Sachbearbeiter, ERF_Mitarbeiter_Nr, ERF_Mitarbeiter, Filiale_Nr, Filiale, Verordner_Nr, Verordner, Vermittler_Nr, Vermittler, Betreff, Bemerkung, Auftrag_Nr, AU_Datum, Lieferschein_Nr, Lieferschein_Datum, Lieferdatum, KV_Nr, KV_Datum, KV_Genehmigung, KV_Genehm_Datum, Lieferstatus, Abrechnungsstatus, Letzte_Aenderung_am, Letzte_Aenderung_Tage, Letzte_Aenderung) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = dbManager.getConn(); PreparedStatement pstmt = conn.prepareStatement(sql))
         {
@@ -691,20 +692,21 @@ public class DatabaseQuery
                         pstmt.setString(25, getValue(data, 29)); // Vermittler Nr
                         pstmt.setString(26, getValue(data, 30)); // Vermittler
                         pstmt.setString(27, getValue(data, 31)); // Betreff
-                        pstmt.setString(28, getValue(data, 37)); // Auftrag Nr
-                        pstmt.setString(29, getValue(data, 38)); // AU Datum
-                        pstmt.setString(30, getValue(data, 41)); // Lieferschein Nr
-                        pstmt.setString(31, getValue(data, 42)); // Lieferschein Datum
-                        pstmt.setString(32, getValue(data, 43)); // Lieferdatum
-                        pstmt.setString(33, getValue(data, 44)); // KV Nr
-                        pstmt.setString(34, getValue(data, 45)); // KV Datum
-                        pstmt.setString(35, getValue(data, 46)); // KV Genehmigung
-                        pstmt.setString(36, getValue(data, 47)); // KV Genehm Datum
-                        pstmt.setString(37, getValue(data, 59)); // Lieferstatus
-                        pstmt.setString(38, getValue(data, 60)); // Abrechnungsstatus
-                        pstmt.setString(39, getValue(data, 66)); // Letzte Aenderung am
-                        pstmt.setString(40, getValue(data, 67)); // Letzte Aenderung Tage
-                        pstmt.setString(41, getValue(data, 68)); // Letzte Aenderung
+                        pstmt.setString(28, getValue(data, 32)); // Betreff
+                        pstmt.setString(29, getValue(data, 37)); // Auftrag Nr
+                        pstmt.setString(30, getValue(data, 38)); // AU Datum
+                        pstmt.setString(31, getValue(data, 41)); // Lieferschein Nr
+                        pstmt.setString(32, getValue(data, 42)); // Lieferschein Datum
+                        pstmt.setString(33, getValue(data, 43)); // Lieferdatum
+                        pstmt.setString(34, getValue(data, 44)); // KV Nr
+                        pstmt.setString(35, getValue(data, 45)); // KV Datum
+                        pstmt.setString(36, getValue(data, 46)); // KV Genehmigung
+                        pstmt.setString(37, getValue(data, 47)); // KV Genehm Datum
+                        pstmt.setString(38, getValue(data, 59)); // Lieferstatus
+                        pstmt.setString(39, getValue(data, 60)); // Abrechnungsstatus
+                        pstmt.setString(40, getValue(data, 66)); // Letzte Aenderung am
+                        pstmt.setString(41, getValue(data, 67)); // Letzte Aenderung Tage
+                        pstmt.setString(42, getValue(data, 68)); // Letzte Aenderung
                         pstmt.executeUpdate();
                     } catch (SQLException sqle) {
                         logger.info("Could'nt process following line: \n" + line);
@@ -754,6 +756,45 @@ public class DatabaseQuery
                     String line = String.format("%s, %s, %s, %s, %s, %s", kvNr, kvDatum, kundenNr, kunde, sachbearbeiterNr, betreff);
                     lines.add(line);
                 }
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        return lines;
+    }
+
+    public List<String> getKlaerungData()
+    {
+
+        List<String> lines = new ArrayList<>();
+        String sql = "SELECT Vorgang_Nr, KV_Nr, Kunden_Nr, Kunde, Betreff, Bemerkung, Vermittler_Nr, Vermittler FROM ControllingData WHERE KV_Genehmigung = 'zur Klärung'";
+
+        try (Connection conn = dbManager.getConn();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql))
+        {
+
+
+
+            while (rs.next())
+            {
+                String vorgangNr = rs.getString("Vorgang_Nr");                                      // 0
+                String kvNr = rs.getString("KV_Nr");                                                // 1
+                String kundenNr = rs.getString("Kunden_Nr");                                        // 2
+                String kunde = rs.getString("Kunde");                                               // 3
+                String betreff = rs.getString("Betreff").replaceAll("\"", "");     // 4
+                String bemerkung = rs.getString("Bemerkung").replaceAll("\"", ""); // 5
+                String vermittlerNr = rs.getString("Vermittler_Nr");                                // 6
+                String vermittler = rs.getString("Vermittler");                                     // 7
+
+
+
+                String line = String.format("%s, %s, %s, %s, %s, %s, %s, %s", vorgangNr, kvNr, kundenNr, kunde, betreff, bemerkung, vermittlerNr, vermittler);
+                lines.add(line);
+
             }
         }
         catch (SQLException e)

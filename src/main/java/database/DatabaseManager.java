@@ -173,20 +173,21 @@ public class DatabaseManager
                 "Vermittler_Nr TEXT NOT NULL," + // 24
                 "Vermittler TEXT NOT NULL," + // 25
                 "Betreff TEXT NOT NULL," + // 26
-                "Auftrag_Nr TEXT NOT NULL," + // 27
-                "AU_Datum TEXT NOT NULL," + // 28
-                "Lieferschein_Nr TEXT NOT NULL," + // 29
-                "Lieferschein_Datum TEXT NOT NULL," + // 30
-                "Lieferdatum TEXT NOT NULL," + // 31
-                "KV_Nr TEXT NOT NULL," + // 32
-                "KV_Datum TEXT NOT NULL," + // 33
-                "KV_Genehmigung TEXT NOT NULL," + // 34
-                "KV_Genehm_Datum TEXT NOT NULL," + // 35
-                "Lieferstatus TEXT NOT NULL," + // 36
-                "Abrechnungsstatus TEXT NOT NULL," + // 37
-                "Letzte_Aenderung_am TEXT NOT NULL," + // 38
-                "Letzte_Aenderung_Tage TEXT NOT NULL," + // 39
-                "Letzte_Aenderung TEXT NOT NULL" + // 40
+                "Bemerkung TEXT NOT NULL," + // 27
+                "Auftrag_Nr TEXT NOT NULL," + // 28
+                "AU_Datum TEXT NOT NULL," + // 29
+                "Lieferschein_Nr TEXT NOT NULL," + // 30
+                "Lieferschein_Datum TEXT NOT NULL," + // 31
+                "Lieferdatum TEXT NOT NULL," + // 32
+                "KV_Nr TEXT NOT NULL," + // 33
+                "KV_Datum TEXT NOT NULL," + // 34
+                "KV_Genehmigung TEXT NOT NULL," + // 35
+                "KV_Genehm_Datum TEXT NOT NULL," + // 36
+                "Lieferstatus TEXT NOT NULL," + // 37
+                "Abrechnungsstatus TEXT NOT NULL," + // 38
+                "Letzte_Aenderung_am TEXT NOT NULL," + // 39
+                "Letzte_Aenderung_Tage TEXT NOT NULL," + // 40
+                "Letzte_Aenderung TEXT NOT NULL" + // 41
                 ");";
 
         //--------------------------------------------------------------------------------------------------------------

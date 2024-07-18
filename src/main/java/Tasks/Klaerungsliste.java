@@ -4,25 +4,134 @@ import Schedule.Jobs.DailyJob;
 import database.DatabaseManager;
 import database.DatabaseQuery;
 import file.FileManager;
+import file.StringSplitter;
+import jakarta.mail.MessagingException;
 import logging.LoggerWrapper;
+import mail.EmailService;
+import model.Employee;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Klaerungsliste
 {
-    private static final LoggerWrapper logger = new LoggerWrapper(DailyJob.class);
+    private static final LoggerWrapper logger = new LoggerWrapper(Klaerungsliste.class);
+    private static final EmailService emailService = EmailService.getInstance();
 
-    public void readIn() throws IOException {
-        DatabaseManager dbManager = DatabaseManager.getInstance(DatabaseManager.getDatabaseFolderPath());
+    private static final String DATABASE_FOLDER_PATH = "C:\\InfoME\\Datenbank";
+
+    public static void doTask() throws IOException
+    {
+        DatabaseManager dbManager = DatabaseManager.getInstance(DATABASE_FOLDER_PATH);
         DatabaseQuery dbQuery = new DatabaseQuery(dbManager);
         FileManager fileManager = new FileManager();
 
-        logger.info("Reading in the new Data");
+
+        logger.info("Reading the recent File");
         List<String> newLines = fileManager.readInKVData(dbQuery.getImportExport());
 
+        logger.info("Writing to the Database");
+        dbQuery.importControllingData(newLines);
+
+        logger.info("Reading the Triggers(Employees)");
+        List<Employee> employees = dbQuery.getEmployeesOfCategory("Klaerungsliste");
+
+        logger.info("Reading the Database (ControllingData Table)");
+        List<String> klaerungData = dbQuery.getKlaerungData();
+
+        logger.info("Getting Mails sent.");
+        getMailsSent(klaerungData, employees);
+
+    }
+
+    private static void getMailsSent(List<String> klaerungsliste, List<Employee> employees)
+    {
+        for (Employee employee : employees)
+        {
+            // Get mail of the employee
+            String email = employee.getEmail();
+
+            // get the data for the one specific employee
+            List<String> klaerungData = getKlaerungData(klaerungsliste,employee);
 
 
 
+
+            if(!klaerungData.isEmpty())
+            {
+                // Email Content
+                StringBuilder emailContent = new StringBuilder();
+
+                String subject = String.format("Klaerungsliste");
+                emailContent.append("<html>");
+                emailContent.append("<body>");
+                emailContent.append("Sehr geehrte/r Mitarbeiter/in,<br><br>folgende KVs sind noch zu klären:<br><br>");
+
+                // Add each approved KV request to the email content
+                for (String line : klaerungData)
+                {
+                    // split the line.
+                    String[] parts = StringSplitter.splitString(line);
+
+                    String[] KundeParts = parts[3].split("\\(");
+                    String Kunde = KundeParts[0];
+
+                    emailContent.append("&rarr; ");
+                    emailContent.append(parts[0]); // Vorgang_Nr
+                    emailContent.append("&nbsp; | &nbsp;");
+                    emailContent.append(parts[1]); // KV_Nr
+                    emailContent.append("&nbsp; | &nbsp;");
+                    emailContent.append(parts[2]); // Kunden_Nr
+                    emailContent.append("&nbsp; | &nbsp;");
+                    emailContent.append(Kunde.replaceAll("\"", "")); // Kunde
+                    emailContent.append("&nbsp; | &nbsp;");
+                    emailContent.append(parts[4]); // Betreff
+                    emailContent.append("&nbsp; | &nbsp;");
+                    emailContent.append(parts[5]); // Bemerkung
+                    emailContent.append("&nbsp; | &nbsp;");
+                    emailContent.append(parts[6]); // Vermittler_Nr
+                    emailContent.append("&nbsp; | &nbsp;");
+                    emailContent.append(parts[7]); // Vermittler
+                    emailContent.append("<br>");
+                }
+                emailContent.append("<br><b>Sanitätshaus Ortho-Aktiv </b><br>Gradnerstraße 108<br>8055 Graz<br>");
+                emailContent.append("</body>");
+                emailContent.append("</html>");
+
+                try
+                {
+                    emailService.sendEmail(email, subject, emailContent.toString());
+                    logger.info("Sent E-Mail to " + email);
+                }
+                catch (MessagingException me)
+                {
+                    logger.error("Fehler beim Senden der E-Mail an " + email + ": " + me.getMessage());
+                }
+            }
+        }
+    }
+
+    public static List<String> getKlaerungData(List<String> klaerungsliste, Employee employee)
+    {
+        List<String> klaerungDataForEmployee = new ArrayList<>();
+
+        for (String line : klaerungsliste)
+        {
+            String parts[] = StringSplitter.splitString(line);
+            String vermittlerNr = parts[6];
+            try
+            {
+                if (Integer.parseInt(vermittlerNr.replaceAll(" ", "")) == employee.getId())
+                {
+                klaerungDataForEmployee.add(line);
+                }
+            }
+            catch (NumberFormatException nfe)
+            {
+                logger.info(vermittlerNr + " is not a Number: " + line);
+            }
+        }
+        return klaerungDataForEmployee;
     }
 }
