@@ -10,13 +10,9 @@ import java.sql.Statement;
 public class DatabaseManager
 {
     private static DatabaseManager instance;
-
     private static final LoggerWrapper logger = new LoggerWrapper(DatabaseManager.class);
-
     private static final String DATABASE_FOLDER_PATH = "C:\\InfoME\\Datenbank";
-
     private String dbUrl;
-
     private Connection conn;
 
     private DatabaseManager(String dbUrl)
@@ -37,7 +33,8 @@ public class DatabaseManager
         return instance;
     }
 
-    public Connection getConn() throws SQLException {
+    public Connection getConn() throws SQLException
+    {
         if(conn == null || conn.isClosed())
         {
             conn = DriverManager.getConnection(dbUrl);
@@ -215,4 +212,5 @@ public class DatabaseManager
         }
 
     }
+
 }

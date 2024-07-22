@@ -531,7 +531,8 @@ public class DatabaseQuery
     //------------------------------------------------------------------------------------------------------------------
     // get KV Genehmigung Value by the given KV Number in our Database
 
-    public String getKVGenehmigungByKVNr(int kvNr, String tableName) {
+    public String getKVGenehmigungByKVNr(int kvNr, String tableName)
+    {
     String sql = "SELECT KV_Genehmigung FROM KV_Data WHERE KV_Nr = ?";
     String kvGenehmigung = null;
 
@@ -551,9 +552,12 @@ public class DatabaseQuery
 
     return kvGenehmigung;
 }
+
     //------------------------------------------------------------------------------------------------------------------
     // Returns true if the given String is a Number
-    public static boolean isNumeric(String str) {
+
+    public static boolean isNumeric(String str)
+    {
         if (str == null || str.isEmpty()) {
             return false;
         }
@@ -565,7 +569,12 @@ public class DatabaseQuery
             return false;
         }
     }
-    public List<Employee> getEmployeesOfCategory(String categoryStr) throws IOException {
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Retrieves employees of a specific category from the database
+
+    public List<Employee> getEmployeesOfCategory(String categoryStr) throws IOException
+    {
 
         List<Employee> employees = new ArrayList<>();
 
@@ -593,7 +602,12 @@ public class DatabaseQuery
         }
         return employees;
     }
-    public List<KVRequest> getKVRequests(List<String> newAcceptedKVs) {
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Converts lines of data into a list of KVRequest objects
+
+    public List<KVRequest> getKVRequests(List<String> newAcceptedKVs)
+    {
             List<KVRequest> kvRequests = new ArrayList<>();
         for (String line : newAcceptedKVs) {
             String[] data = StringSplitter.splitString(line);
@@ -622,7 +636,10 @@ public class DatabaseQuery
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    public void importControllingData(List<String> lines) {
+    // Imports controlling data into the database, skipping already imported data from yesterday
+
+    public void importControllingData(List<String> lines)
+    {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         String sql = "SELECT Uebernahme_Datum FROM ControllingData LIMIT 1";
@@ -722,6 +739,8 @@ public class DatabaseQuery
         logger.info("Successfully imported " + lines.size() + " lines.");
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Retrieves data of urgencies from the database
 
     public List<String> getUrgenzData()
     {
@@ -766,6 +785,9 @@ public class DatabaseQuery
         return lines;
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    // Retrieves data of clarifications from the database
+
     public List<String> getKlaerungData()
     {
 
@@ -804,6 +826,7 @@ public class DatabaseQuery
 
         return lines;
     }
+
 
 }
 

@@ -1,6 +1,5 @@
 package Tasks;
 
-import Schedule.Jobs.DailyJob;
 import database.DatabaseManager;
 import database.DatabaseQuery;
 import file.FileManager;
@@ -12,7 +11,9 @@ import model.Employee;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Klaerungsliste
 {
@@ -26,7 +27,6 @@ public class Klaerungsliste
         DatabaseManager dbManager = DatabaseManager.getInstance(DATABASE_FOLDER_PATH);
         DatabaseQuery dbQuery = new DatabaseQuery(dbManager);
         FileManager fileManager = new FileManager();
-
 
         logger.info("Reading the recent File");
         List<String> newLines = fileManager.readInKVData(dbQuery.getImportExport());
@@ -42,72 +42,76 @@ public class Klaerungsliste
 
         logger.info("Getting Mails sent.");
         getMailsSent(klaerungData, employees);
-
     }
 
     private static void getMailsSent(List<String> klaerungsliste, List<Employee> employees)
     {
+        // Map to aggregate klaerungData by email address
+        Map<String, List<String>> emailToKlaerungDataMap = new HashMap<>();
+
         for (Employee employee : employees)
         {
-            // Get mail of the employee
             String email = employee.getEmail();
+            List<String> klaerungData = getKlaerungData(klaerungsliste, employee);
 
-            // get the data for the one specific employee
-            List<String> klaerungData = getKlaerungData(klaerungsliste,employee);
-
-
-
-
-            if(!klaerungData.isEmpty())
+            if (!klaerungData.isEmpty())
             {
-                // Email Content
-                StringBuilder emailContent = new StringBuilder();
-
-                String subject = String.format("Klaerungsliste");
-                emailContent.append("<html>");
-                emailContent.append("<body>");
-                emailContent.append("Sehr geehrte/r Mitarbeiter/in,<br><br>folgende KVs sind noch zu klären:<br><br>");
-
-                // Add each approved KV request to the email content
-                for (String line : klaerungData)
+                if (!emailToKlaerungDataMap.containsKey(email))
                 {
-                    // split the line.
-                    String[] parts = StringSplitter.splitString(line);
-
-                    String[] KundeParts = parts[3].split("\\(");
-                    String Kunde = KundeParts[0];
-
-                    emailContent.append("&rarr; ");
-                    emailContent.append(parts[0]); // Vorgang_Nr
-                    emailContent.append("&nbsp; | &nbsp;");
-                    emailContent.append(parts[1]); // KV_Nr
-                    emailContent.append("&nbsp; | &nbsp;");
-                    emailContent.append(parts[2]); // Kunden_Nr
-                    emailContent.append("&nbsp; | &nbsp;");
-                    emailContent.append(Kunde.replaceAll("\"", "")); // Kunde
-                    emailContent.append("&nbsp; | &nbsp;");
-                    emailContent.append(parts[4]); // Betreff
-                    emailContent.append("&nbsp; | &nbsp;");
-                    emailContent.append(parts[5]); // Bemerkung
-                    emailContent.append("&nbsp; | &nbsp;");
-                    emailContent.append(parts[6]); // Vermittler_Nr
-                    emailContent.append("&nbsp; | &nbsp;");
-                    emailContent.append(parts[7]); // Vermittler
-                    emailContent.append("<br>");
+                    emailToKlaerungDataMap.put(email, new ArrayList<>());
                 }
-                emailContent.append("<br><b>Sanitätshaus Ortho-Aktiv </b><br>Gradnerstraße 108<br>8055 Graz<br>");
-                emailContent.append("</body>");
-                emailContent.append("</html>");
+                emailToKlaerungDataMap.get(email).addAll(klaerungData);
+            }
+        }
 
-                try
-                {
-                    emailService.sendEmail(email, subject, emailContent.toString());
-                    logger.info("Sent E-Mail to " + email);
-                }
-                catch (MessagingException me)
-                {
-                    logger.error("Fehler beim Senden der E-Mail an " + email + ": " + me.getMessage());
-                }
+        // Send emails based on aggregated data
+        for (Map.Entry<String, List<String>> entry : emailToKlaerungDataMap.entrySet())
+        {
+            String email = entry.getKey();
+            List<String> klaerungData = entry.getValue();
+
+            StringBuilder emailContent = new StringBuilder();
+            String subject = "Klaerungsliste";
+            emailContent.append("<html>");
+            emailContent.append("<body>");
+            emailContent.append("Sehr geehrte/r Mitarbeiter/in,<br><br>folgende KVs sind noch zu klären:<br><br>");
+
+            for (String line : klaerungData)
+            {
+                String[] parts = StringSplitter.splitString(line);
+                String[] KundeParts = parts[3].split("\\(");
+                String Kunde = KundeParts[0];
+
+                emailContent.append("&rarr; ");
+                emailContent.append(parts[0]); // Vorgang_Nr
+                emailContent.append("&nbsp; | &nbsp;");
+                emailContent.append(parts[1]); // KV_Nr
+                emailContent.append("&nbsp; | &nbsp;");
+                emailContent.append(parts[2]); // Kunden_Nr
+                emailContent.append("&nbsp; | &nbsp;");
+                emailContent.append(Kunde.replaceAll("\"", "")); // Kunde
+                emailContent.append("&nbsp; | &nbsp;");
+                emailContent.append(parts[4]); // Betreff
+                emailContent.append("&nbsp; | &nbsp;");
+                emailContent.append(parts[5]); // Bemerkung
+                emailContent.append("&nbsp; | &nbsp;");
+                emailContent.append(parts[6]); // Vermittler_Nr
+                emailContent.append("&nbsp; | &nbsp;");
+                emailContent.append(parts[7]); // Vermittler
+                emailContent.append("<br>");
+            }
+            emailContent.append("<br><b>Sanitätshaus Ortho-Aktiv </b><br>Gradnerstraße 108<br>8055 Graz<br>");
+            emailContent.append("</body>");
+            emailContent.append("</html>");
+
+            try
+            {
+                emailService.sendEmail(email, subject, emailContent.toString());
+                logger.info("Sent E-Mail to " + email);
+            }
+            catch (MessagingException me)
+            {
+                logger.error("Fehler beim Senden der E-Mail an " + email + ": " + me.getMessage());
             }
         }
     }
@@ -124,7 +128,7 @@ public class Klaerungsliste
             {
                 if (Integer.parseInt(vermittlerNr.replaceAll(" ", "")) == employee.getId())
                 {
-                klaerungDataForEmployee.add(line);
+                    klaerungDataForEmployee.add(line);
                 }
             }
             catch (NumberFormatException nfe)
